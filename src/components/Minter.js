@@ -1,67 +1,133 @@
 import React, { Component } from 'react'
 import { Form, Button } from 'react-bootstrap';
-// import Web3 from 'web3';
-// import Token from '../abis/Token.json'
 
 class Minter extends Component {
   constructor(props) {
     super(props)
     this.state = {
       tokenId: '',
+      toAddress: '',
+      loading: false,
     }
 
     this.handleChangetokenId = this.handleChangetokenId.bind(this)
     this.handleMinting = this.handleMinting.bind(this)
   }
 
-  // async mintTokenCall(tokenId) {
-  //   const web3 = new Web3(window.ethereum);
-  //   const netId = await web3.eth.net.getId();
-  //   const token = new web3.eth.Contract(
-  //     Token.abi,
-  //     Token.networks[netId].address,
-  //   )
-  //   const accounts = await web3.eth.getAccounts();
-  //   console.log(accounts[0]);
-  //   console.log(netId);
-  //   if (token !== 'undefined') {
-  //     try {
-  //       await token.methods
-  //       .mintTokens(tokenId)
-  //       .send({
-  //         from: accounts[0],
-  //       })
-  //     } catch (e) {
-  //       console.log('Error, mintTokens(): ', e)
-  //     }
-  //   }
-  // }
+  async mintTokenCall(tokenId) {
+    
+    const token = this.props.token;
+    const account = this.props.account;
+    
+    if (token !== 'undefined') {
+      try {
+        await token.methods
+        .mintTokens(tokenId)
+        .send({
+          from: account,
+        })
+        this.setState({
+          loading: false
+        });
+      } catch (e) {
+        console.log('Error, mintTokens(): ', e);
+        this.setState({
+          loading: false
+        });
+      }
+    }
+  }
+  async SafeMintTokenCall(toAddress,tokenId) {
+    const token = this.props.token;
+    const account = this.props.account;
+    
+    if (token !== 'undefined') {
+      try {
+        await token.methods
+        .SafeMint(toAddress,tokenId)
+        .send({
+          from: account,
+        })
+        this.setState({
+          loading: false
+        });
+      } catch (e) {
+        console.log('Error, mintTokens(): ', e);
+        this.setState({
+          loading: false
+        });
+      }
+    }
+  }
   handleChangetokenId = (event) => {
-    this.setState({
+      this.setState({
       tokenId: event.target.value,
+    })
+  }
+  handleChangetoAddress = (event) => {
+    this.setState({
+      toAddress: event.target.value,
     })
   }
   handleMinting = (e) => {
     e.preventDefault()
 
-    // alert('To: ' + this.state.tokenId)
+    this.setState({
+      loading: true
+    });
+    
     this.mintTokenCall(this.state.tokenId)
+  }
+  handleSafeMinting = (e) => {
+    e.preventDefault()
+
+    this.setState({
+      loading: true
+    });
+    
+    this.SafeMintTokenCall(this.state.toAddress,this.state.tokenId)
   }
   render() {
     return (
       <div>
         <Form onSubmit={this.handleMinting}>
+          <fieldset disabled={this.state.loading}>
           <Form.Group
             value={this.state.tokenId}
             onChange={this.handleChangetokenId}
           >
             <Form.Label>Token Id</Form.Label>
-            <Form.Control placeholder="Token Id" required pattern="[0-9]*" type="number"/>
+            <Form.Control placeholder="Token Id" required pattern="[0-9]*" type="number" min="1"/>
           </Form.Group>
 
-          <Button variant="primary" type="submit">
+          <Button variant="primary" type="submit" disabled={this.state.loading}>
             Mint
           </Button>
+          </fieldset>
+        </Form>
+        <h4>Safe Mint</h4>
+        <Form onSubmit={this.handleSafeMinting}>
+          <fieldset disabled={this.state.loading}>
+          <Form.Group
+            value={this.state.toAddress}
+            onChange={this.handleChangetoAddress}
+          >
+            <Form.Label>To</Form.Label>
+            <Form.Control placeholder="0xa7ssd124" required />
+          </Form.Group>
+
+          <Form.Group
+            value={this.state.tokenId}
+            onChange={this.handleChangetokenId}
+          >
+            <Form.Label>Token Id</Form.Label>
+            <Form.Control placeholder="Token Id" required pattern="[0-9]*" type="number" min="1"/>
+          </Form.Group>
+
+          <Button variant="primary" type="submit" disabled={this.state.loading}>
+            Safe Mint
+          </Button>
+          </fieldset>
         </Form>
       </div>
     )

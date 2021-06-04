@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Button } from 'react-bootstrap'
-class GetApproved extends Component {
+class OwnerOf extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -9,27 +9,22 @@ class GetApproved extends Component {
     }
 
     this.handleChangetokenId = this.handleChangetokenId.bind(this)
-    this.handleGetApprove = this.handleGetApprove.bind(this)
+    this.handleGetOwner = this.handleGetOwner.bind(this)
   }
 
-  async getApprovedCall(tokenId) {
+  async getOwnerOfCall(tokenId) {
     const token = this.props.token
     var check = ''
     if (token !== 'undefined') {
       try {
         await token.methods
-          .getApproved(tokenId)
+          .OwnerOf(tokenId)
           .call()
           .then(function (x) {
             check = x
           })
 
-        alert(
-          'Aprroved Operator of token Id ' +
-            this.state.tokenId +
-            ' is ' +
-            check,
-        )
+        alert('Owner Of token Id ' + this.state.tokenId + ' is ' + check)
 
         this.setState({
           loading: false,
@@ -47,17 +42,17 @@ class GetApproved extends Component {
       tokenId: event.target.value,
     })
   }
-  handleGetApprove = (e) => {
+  handleGetOwner = (e) => {
     e.preventDefault()
     this.setState({
       loading: true,
     })
-    this.getApprovedCall(this.state.tokenId)
+    this.getOwnerOfCall(this.state.tokenId)
   }
   render() {
     return (
       <div>
-        <Form onSubmit={this.handleGetApprove}>
+        <Form onSubmit={this.handleGetOwner}>
           <fieldset disabled={this.state.loading}>
             <Form.Group
               value={this.state.tokenId}
@@ -87,4 +82,4 @@ class GetApproved extends Component {
   }
 }
 
-export default GetApproved
+export default OwnerOf

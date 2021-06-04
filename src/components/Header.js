@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import { Container, Jumbotron } from 'react-bootstrap';
-
+import React, { Component } from 'react'
+import { Container, Jumbotron } from 'react-bootstrap'
 
 class Header extends Component {
   render() {
@@ -8,8 +7,10 @@ class Header extends Component {
       <div>
         <Jumbotron fluid>
           <Container>
-            <h1>Welcome to Launchnode's ERC-721 Tokens</h1>
-            <h4>{this.props.account}</h4>
+            <h1 style={{ textAlign: 'center' }}>
+              Welcome to Launchnode's ERC-721 Tokens
+            </h1>
+            <h3 style={{ textAlign: 'center' }}>{this.props.account}</h3>
           </Container>
         </Jumbotron>
       </div>
@@ -17,4 +18,4 @@ class Header extends Component {
   }
 }
 
-export default Header;
+export default Header

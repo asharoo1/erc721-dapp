@@ -1,8 +1,5 @@
-import React, { Component } from 'react';
-import {Form, Button} from 'react-bootstrap';
-// import Web3 from 'web3';
-// import Erc20Token from '../abis/Erc20Token.json';
-
+import React, { Component } from 'react'
+import { Form, Button } from 'react-bootstrap'
 
 class Approve extends Component {
   constructor(props) {
@@ -10,33 +7,31 @@ class Approve extends Component {
     this.state = {
       toAddress: '',
       tokenId: 0,
+      loading: false,
     }
-    this.handleChangeToAddress = this.handleChangeToAddress.bind(this);
-    this.handleChangetokenId = this.handleChangetokenId.bind(this);
-    this.handleApprove = this.handleApprove.bind(this);
+    this.handleChangeToAddress = this.handleChangeToAddress.bind(this)
+    this.handleChangetokenId = this.handleChangetokenId.bind(this)
+    this.handleApprove = this.handleApprove.bind(this)
   }
-  // async approveCall(spenderAddress, Amount){
-    
-  //   const web3 = new Web3(window.ethereum);
-  //   const netId = await web3.eth.net.getId()
-  //   const erc20T = new web3.eth.Contract(
-  //     Erc20Token.abi,
-  //     Erc20Token.networks[netId].address
-  //   );
-  //   const accounts = await web3.eth.getAccounts();
-  //   if(erc20T !== 'undefined'){
-  //     try{
-  //       await erc20T.methods
-  //       .approve(spenderAddress, Amount)
-  //       .send({
-  //         from: accounts[0]
-  //       });
-        
-  //     }catch(e){
-  //       console.log('Error, transfer(): ', e);
-  //     }
-  //   }
-  // }
+  async approveCall(toAddress, tokenId) {
+    const token = this.props.token
+    const account = this.props.account
+    if (token !== 'undefined') {
+      try {
+        await token.methods._approveAddress(toAddress, tokenId).send({
+          from: account,
+        })
+        this.setState({
+          loading: false,
+        })
+      } catch (e) {
+        console.log('Error, approveCall(): ', e)
+        this.setState({
+          loading: false,
+        })
+      }
+    }
+  }
 
   handleChangeToAddress(event) {
     this.setState({
@@ -51,31 +46,49 @@ class Approve extends Component {
   }
   handleApprove = (e) => {
     e.preventDefault()
+    this.setState({
+      loading: true,
+    })
 
-    alert('To: ' + this.state.toAddress + ' Token Id: ' + this.state.tokenId)
-    // this.approveCall(this.state.toAddress, this.state.tokenId);
+    this.approveCall(this.state.toAddress, this.state.tokenId)
   }
 
   render() {
     return (
       <div>
         <Form onSubmit={this.handleApprove}>
-          <Form.Group value = {this.state.toAddress} onChange={this.handleChangeToAddress}>
-            <Form.Label>To</Form.Label>
-            <Form.Control placeholder="0xabs12a" />
-            <Form.Text className="text-muted">
-              address
-            </Form.Text>
-          </Form.Group>
+          <fieldset disabled={this.state.loading}>
+            <Form.Group
+              value={this.state.toAddress}
+              onChange={this.handleChangeToAddress}
+            >
+              <Form.Label>To</Form.Label>
+              <Form.Control placeholder="0xabs12a" required />
+              <Form.Text className="text-muted">address</Form.Text>
+            </Form.Group>
 
-          <Form.Group value = {this.state.tokenId} onChange={this.handleChangetokenId}>
-            <Form.Label>Token Id</Form.Label>
-            <Form.Control placeholder="Token Id" />
-          </Form.Group>
+            <Form.Group
+              value={this.state.tokenId}
+              onChange={this.handleChangetokenId}
+            >
+              <Form.Label>Token Id</Form.Label>
+              <Form.Control
+                placeholder="Token Id"
+                required
+                pattern="[0-9]*"
+                type="number"
+                min="1"
+              />
+            </Form.Group>
 
-          <Button variant="primary" type="submit">
-            Send
-          </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={this.state.loading}
+            >
+              Send
+            </Button>
+          </fieldset>
         </Form>
       </div>
     )

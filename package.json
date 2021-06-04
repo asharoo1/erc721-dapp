@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@openzeppelin/contracts": "^3.4.1",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -17,7 +18,8 @@
     "solc": "^0.8.4",
     "truffle-hdwallet-provider": "^1.0.17",
     "web-vitals": "^1.1.2",
-    "web3": "^1.0.0-beta.26"
+    "web3": "^1.0.0-beta.26",
+    "zeppelin-solidity": "^1.12.0"
   },
   "scripts": {
     "start": "react-scripts start",

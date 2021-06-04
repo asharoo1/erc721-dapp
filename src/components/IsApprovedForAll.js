@@ -7,12 +7,42 @@ class IsApprovedForAll extends Component {
     this.state = {
       ownerAddress: '',
       operatorAddress: '',
+      loading: false,
     }
     this.handleChangeOwnerAddress = this.handleChangeOwnerAddress.bind(this)
     this.handleChangeOperatorAddress = this.handleChangeOperatorAddress.bind(
       this,
     )
     this.isApprovedForAll = this.isApprovedForAll.bind(this)
+  }
+
+  async isApprovedForAllCall(ownerAddress, operatorAddress) {
+    const token = this.props.token
+    // const account = this.props.account
+    var check = false
+    if (token !== 'undefined') {
+      try {
+        await token.methods
+          .IsApprovedForAll(ownerAddress, operatorAddress)
+          .call()
+          .then(function (x) {
+            check = x
+          })
+        if (check) {
+          alert(check)
+        } else {
+          alert(check)
+        }
+        this.setState({
+          loading: false,
+        })
+      } catch (e) {
+        console.log('Error, approveCall(): ', e)
+        this.setState({
+          loading: false,
+        })
+      }
+    }
   }
 
   handleChangeOwnerAddress(event) {
@@ -29,39 +59,45 @@ class IsApprovedForAll extends Component {
   isApprovedForAll = (e) => {
     e.preventDefault()
 
-    alert(
-      'To: ' +
-        this.state.ownerAddress +
-        'Operator Address: ' +
-        this.state.operatorAddress,
+    this.setState({
+      loading: true,
+    })
+    this.isApprovedForAllCall(
+      this.state.ownerAddress,
+      this.state.operatorAddress,
     )
-    // this.approveCall(this.state.toAddress, this.state.tokenId);
   }
   render() {
     return (
       <div>
         <Form onSubmit={this.isApprovedForAll}>
-          <Form.Group
-            value={this.state.ownerAddress}
-            onChange={this.handleChangeOwnerAddress}
-          >
-            <Form.Label>Owner</Form.Label>
-            <Form.Control placeholder="0xabs12a" />
-            <Form.Text className="text-muted">Owner's address</Form.Text>
-          </Form.Group>
+          <fieldset disabled={this.state.loading}>
+            <Form.Group
+              value={this.state.ownerAddress}
+              onChange={this.handleChangeOwnerAddress}
+            >
+              <Form.Label>Owner</Form.Label>
+              <Form.Control placeholder="0xabs12a" required />
+              <Form.Text className="text-muted">Owner's address</Form.Text>
+            </Form.Group>
 
-          <Form.Group
-            value={this.state.operatorAddress}
-            onChange={this.handleChangeOperatorAddress}
-          >
-            <Form.Label>Operator</Form.Label>
-            <Form.Control placeholder="0xabs12a" />
-            <Form.Text className="text-muted">Operator's address</Form.Text>
-          </Form.Group>
+            <Form.Group
+              value={this.state.operatorAddress}
+              onChange={this.handleChangeOperatorAddress}
+            >
+              <Form.Label>Operator</Form.Label>
+              <Form.Control placeholder="0xabs12a" required />
+              <Form.Text className="text-muted">Operator's address</Form.Text>
+            </Form.Group>
 
-          <Button variant="primary" type="submit">
-            Send
-          </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={this.state.loading}
+            >
+              Send
+            </Button>
+          </fieldset>
         </Form>
       </div>
     )

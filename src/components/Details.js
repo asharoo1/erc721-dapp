@@ -4,7 +4,7 @@ import { Card, Accordion, Button } from 'react-bootstrap'
 class Details extends Component {
   render() {
     return (
-      <div >
+      <div>
         <Accordion>
           <Card>
             <Card.Header>
@@ -26,34 +26,16 @@ class Details extends Component {
               <Card.Body>{this.props.tokenSymbol}</Card.Body>
             </Accordion.Collapse>
           </Card>
-          {/* <Card>
-            <Card.Header>
-              <Accordion.Toggle as={Button} variant="link" eventKey="2">
-              Total Supply
-              </Accordion.Toggle>
-            </Card.Header>
-            <Accordion.Collapse eventKey="2">
-              <Card.Body>{this.props.totalSupply}</Card.Body>
-            </Accordion.Collapse>
-          </Card> */}
-          {/* <Card>
-            <Card.Header>
-              <Accordion.Toggle as={Button} variant="link" eventKey="3">
-                Decimals
-              </Accordion.Toggle>
-            </Card.Header>
-            <Accordion.Collapse eventKey="3">
-              <Card.Body>{this.props.decimal}</Card.Body>
-            </Accordion.Collapse>
-          </Card> */}
           <Card>
             <Card.Header>
               <Accordion.Toggle as={Button} variant="link" eventKey="3">
-               Balance Of {this.props.account}
+                Balance Of {this.props.account}
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="3">
-              <Card.Body>{(this.props.tokenBalance)} {this.props.tokenSymbol}</Card.Body>
+              <Card.Body>
+                {this.props.tokenBalance} {this.props.tokenSymbol}
+              </Card.Body>
             </Accordion.Collapse>
           </Card>
         </Accordion>
